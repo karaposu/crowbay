@@ -1,0 +1,1044 @@
+openapi: 3.0.3
+info:
+  title: Crowbay 
+  version: '1.0.0'
+
+paths:
+  #############################
+  #         Wallet            #
+  #############################
+  
+  /wallet/add-balance:
+    post:
+      tags:
+        - wallet
+      summary: Add balance to user account
+      description: Allows a user to deposit funds (e.g., USDT, PEPE) into their platform wallet.
+      operationId: addBalance
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: Amount of currency to add
+                coin_ticker:
+                  type: string
+                  description: Cryptocurrency ticker (e.g., "USDT", "PEPE")
+              required:
+                - amount
+                - coin_ticker
+      responses:
+        '200':
+          description: Balance deposit details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Please send your deposit to the following address."
+                  address_for_that_coin:
+                    type: string
+                    example: "0x1234...ABCD"
+                  coin_ticker:
+                    type: string
+                    example: "USDT"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /wallet/withdraw:
+    post:
+      tags:
+        - wallet
+      summary: Withdraw money from user account
+      description: Allows a user to withdraw funds (e.g., USDT, PEPE) from their platform wallet.
+      operationId: withdrawMoney
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: The amount to withdraw
+                coin_ticker:
+                  type: string
+                  description: Cryptocurrency ticker (e.g., "USDT", "PEPE")
+                withdrawal_address:
+                  type: string
+                  description: The address (or other payment detail) to send the funds
+              required:
+                - amount
+                - coin_ticker
+                - withdrawal_address
+      responses:
+        '200':
+          description: Withdrawal processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Withdrawal initiated."
+                  transfer_id:
+                    type: string
+                    example: "TX123456"
+                  remaining_balance:
+                    type: number
+                    format: float
+                    example: 50.00
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /wallet/transactions:
+    get:
+      tags:
+        - wallet
+      summary: Get transaction history
+      description: Returns a list of all deposit and withdrawal transactions for the authenticated user.
+      operationId: transactionHistory
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, transaction_started, completed, failed]
+          description: Optional filter by transaction status
+      responses:
+        '200':
+          description: A list of user transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    transaction_id:
+                      type: string
+                      example: "TX-1001"
+                    type:
+                      type: string
+                      example: "deposit"  # or "withdraw"
+                    coin_ticker:
+                      type: string
+                      example: "USDT"
+                    amount:
+                      type: number
+                      format: float
+                      example: 100.5
+                    status:
+                      type: string
+                      enum: [pending, transaction_started, completed, failed]
+                      example: "pending"
+                    created_at:
+                      type: string
+                      format: date-time
+                      example: "2025-02-26T12:34:56Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  #############################
+  #           Tasks           #
+  #############################
+
+  /tasks:
+    get:
+      tags:
+        - tasks
+      summary: List tasks
+      description: Retrieve a list of tasks with optional filtering.
+      operationId: listTasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: user_attribute_filters
+          in: query
+          schema:
+            type: string
+            example: "city=New York;age=18-25" 
+          description: Custom user-attribute filters (format can vary)
+        - name: total_budget
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Filter tasks by total budget (e.g. >= this value)
+        - name: you_earn
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Filter tasks by how much a doer can earn
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [open, accepted, completed, disputed]
+          description: Filter tasks by status
+        - name: creation_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter tasks created on or after this date
+        - name: partition_deadline
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter tasks with a partition deadline on or after this date
+        - name: submission_deadline
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter tasks with a submission deadline on or after this date
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter tasks by category (e.g., "social_media", "marketing")
+      responses:
+        '200':
+          description: A list of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    task_id:
+                      type: string
+                      example: "task-123"
+                    desc:
+                      type: string
+                      example: "Boost my Instagram"
+                    total_budget:
+                      type: number
+                      format: float
+                      example: 100.0
+                    you_earn:
+                      type: number
+                      format: float
+                      example: 5.0
+                    status:
+                      type: string
+                      enum: [open, accepted, completed, disputed]
+                      example: "open"
+                    creation_date:
+                      type: string
+                      format: date-time
+                      example: "2025-02-26T10:00:00Z"
+                    partition_deadline:
+                      type: string
+                      format: date-time
+                      example: "2025-03-01T10:00:00Z"
+                    submission_deadline:
+                      type: string
+                      format: date-time
+                      example: "2025-03-20T10:00:00Z"
+                    category:
+                      type: string
+                      example: "social_media"
+                    bay_review:
+                      type: boolean
+                      example: false
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - tasks
+      summary: Create a new task
+      description: Allows a user to create a task with specified budget, filters, deadlines, etc.
+      operationId: createTask
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                desc:
+                  type: string
+                  example: "Boost my Instagram"
+                total_budget:
+                  type: number
+                  format: float
+                  example: 100
+                you_earn:
+                  type: number
+                  format: float
+                  description: How much each participant will earn
+                  example: 5
+                partition_deadline:
+                  type: string
+                  format: date-time
+                  example: "2025-03-01T10:00:00Z"
+                submission_deadline:
+                  type: string
+                  format: date-time
+                  example: "2025-03-20T10:00:00Z"
+                category:
+                  type: string
+                  example: "social_media"
+                bay_review:
+                  type: boolean
+                  description: Indicates if the task requires a special review
+                  example: false
+                filters:
+                  type: object
+                  properties:
+                    city:
+                      type: string
+                      example: "New York"
+                    demographic:
+                      type: string
+                      example: "university students"
+              required:
+                - desc
+                - total_budget
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    example: "123456"
+                  msg:
+                    type: string
+                    example: "Task created."
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/my:
+    get:
+      tags:
+        - tasks
+      summary: List tasks created by the authenticated user
+      description: Returns all tasks that the user has created.
+      operationId: listMyTasks
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of tasks created by the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    task_id:
+                      type: string
+                      example: "task-123"
+                    desc:
+                      type: string
+                      example: "Boost my Instagram"
+                    total_budget:
+                      type: number
+                      format: float
+                    you_earn:
+                      type: number
+                      format: float
+                    status:
+                      type: string
+                      enum: [open, accepted, completed, disputed]
+                    creation_date:
+                      type: string
+                      format: date-time
+                    partition_deadline:
+                      type: string
+                      format: date-time
+                    submission_deadline:
+                      type: string
+                      format: date-time
+                    category:
+                      type: string
+                    bay_review:
+                      type: boolean
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/participated:
+    get:
+      tags:
+        - tasks
+      summary: List tasks the user has participated in
+      description: Returns tasks that the user accepted or performed in the past or is currently performing.
+      operationId: listParticipatedTasks
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of tasks the user participated in
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    task_id:
+                      type: string
+                    desc:
+                      type: string
+                    you_earn:
+                      type: number
+                      format: float
+                    status:
+                      type: string
+                      enum: [open, accepted, completed, disputed]
+                    partition_deadline:
+                      type: string
+                      format: date-time
+                    submission_deadline:
+                      type: string
+                      format: date-time
+                    category:
+                      type: string
+                    bay_review:
+                      type: boolean
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{taskId}/accept:
+    post:
+      tags:
+        - tasks
+      summary: Accept a task
+      description: Allows a user to accept a task, indicating they will complete it.
+      operationId: acceptTask
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the task to accept
+      responses:
+        '200':
+          description: Task accepted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Task accepted."
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Task with provided ID not found."
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{taskId}/reject:
+    post:
+      tags:
+        - tasks
+      summary: Reject a task after accepting
+      description: Allows a user to forfeit a task they previously accepted.
+      operationId: rejectTaskAfterAcceptance
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the task to reject
+      responses:
+        '200':
+          description: Task rejected successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Task rejected."
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Task not found or cannot be rejected
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Task not found or invalid status."
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{taskId}/dispute:
+    post:
+      tags:
+        - tasks
+      summary: Open a dispute on a task
+      description: Allows either the task creator or task doer to open a dispute if there’s disagreement about task completion, payment, etc.
+      operationId: openDispute
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the task to dispute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  example: "Task doer did not provide proper proof."
+                details:
+                  type: string
+                  example: "The screen recording was incomplete."
+              required:
+                - reason
+      responses:
+        '200':
+          description: Dispute opened successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Dispute created."
+                  dispute_id:
+                    type: string
+                    example: "DISP-1001"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Task not found."
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{taskId}/validation:
+    post:
+      tags:
+        - tasks
+      summary: Submit proof for task validation
+      description: Allows the task doer to upload screen recording or relevant files for AI verification.
+      operationId: taskValidation
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the task being validated
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                proof_video:
+                  type: string
+                  format: binary
+                  description: Screen recording file
+                additional_notes:
+                  type: string
+                  description: Optional notes about the proof
+      responses:
+        '200':
+          description: Proof uploaded and under review
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Proof uploaded. Await AI verification."
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Task not found."
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks/{taskId}/validate:
+    post:
+      tags:
+        - tasks
+      summary: Validate a task is finished
+      description: Allows the system or task creator to confirm the task is completed. Could be triggered by an admin or an automated AI service.
+      operationId: validateTaskFinished
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the task to validate as completed
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                admin_override:
+                  type: boolean
+                  description: Whether an admin is forcing the validation
+                  example: false
+      responses:
+        '200':
+          description: Task successfully validated as completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Task completed and payment released."
+                  task_status:
+                    type: string
+                    example: "completed"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Task not found."
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+  
+  /auth/verify-email:
+    get:
+      tags:
+        - auth
+      summary: Verify user's email
+      description: Verifies a user's email address using a token sent via email.
+      operationId: verifyEmail
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The token sent to the user's email address for verification.
+      responses:
+        '200':
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Email verified successfully"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  access_token:
+                    type: string
+                    description: JWT access token for authenticated user
+                  token_type:
+                      type: string
+                      description: Type of the token (e.g., "bearer")
+                      example: bearer
+        '400':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Log in a user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/private:
+    get:
+      tags:
+        - auth
+      summary: Access protected route
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: Log out a user
+      responses:
+        '200':
+          description: Successful logout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/reset-password:
+    post:
+      tags:
+        - auth
+      summary: Reset user's password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                new_password:
+                  type: string
+              required:
+                - email
+                - new_password
+      responses:
+        '200':
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+        '400':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+
+
+  /auth/refresh-token:
+    post:
+      tags:
+        - auth
+      summary: Refresh JWT token using email
+      description: Regenerates a JWT token based on the provided email address.
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address associated with the user's account.
+              required:
+                - email
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: The new JWT token for the user.
+                  token_type:
+                    type: string
+                    example: "bearer"
+        '400':
+          description: Bad request. The email is not found or is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Invalid email address"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+  /api/login:
+    post:
+      tags:
+        - auth
+      summary: Authenticate user
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: "bearer"
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    BadRequestError:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Invalid request data."
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Unauthorized."
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Something went wrong."

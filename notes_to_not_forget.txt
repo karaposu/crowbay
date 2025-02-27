@@ -1,0 +1,11 @@
+
+
+1. 
+bays can create a task and give different rates to different attribute groups such as 
+
+18-25 should get $10
+25-35 should get $7 
+
+or female should get $15 and male should get $10
+
+

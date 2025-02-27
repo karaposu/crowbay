@@ -1,0 +1,51 @@
+llmservice
+langchain-community
+
+streamlit
+pandas
+matplotlib
+pyyaml
+tqdm
+
+ipywidgets
+fastapi
+werkzeug
+uvicorn
+pyjwt
+python-magic
+python-dotenv
+dependency_injector
+indented_logger
+python-multipart
+python-jose
+email_validator
+openpyxl
+fastapi_login
+passlib
+bcrypt
+xlrd
+python_calamine
+openai
+langchain-openai
+sqlalchemy
+cloud-sql-python-connector[pymysql]
+
+boto3
+dateparser
+
+
+
+#brew install libmagic
+#sudo apt-get install libmagic1
+#sudo apt-get install libmagic-dev
+
+#ollama pull gemma2:2b
+#ollama pull gemma2
+# ollama pull gemma2:9b-instruct-fp16
+# ollama pull gemma2:9b-instruct-q8_0
+# ollama pull gemma2:9b-instruct-q5_1
+# ollama pull gemma2:9b-instruct-q2_K
+# ollama pull gemma2:9b-instruct-q4_K_M
+# ollama pull phi3:3.8b-mini-4k-instruct-q8_0
+# ollama run llama3.1:8b-instruct-q2_K
+# ollama pull phi3.5:3.8b-mini-instruct-q8_0

@@ -4,10 +4,12 @@ import logging
 from fastapi import HTTPException
 from traceback import format_exc
 
-from impl.utils import c
+from impl.utils import create_db_session
 
 from models.create_task_request import CreateTaskRequest
 from models.create_task201_response import CreateTask201Response
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -26,7 +28,7 @@ class CreateTaskService:
         self.user_id = user_id
         self.dependencies = dependencies
         self.response: CreateTask201Response = None
-        logger.debug("Inside BuyPepecoinOrderingService")
+        logger.debug("Inside CreateTaskService")
         self.preprocess_request_data()
         self.process_request()
         
@@ -39,25 +41,23 @@ class CreateTaskService:
         #     raise HTTPException(status_code=400, detail="Must specify either give_amount or take_amount.")
 
         try:
-            session = create_pepay_db_session(self.dependencies)
-            buypepecoin_repository_provider = self.dependencies.buypepecoin_repository_provider
+            session = create_db_session(self.dependencies)
             
             try:
                 logger.debug("Now inside the database session")
                 
                 # Create the repository with the session
-                buypepecoin_repository = buypepecoin_repository_provider(session=session)
+                task_repository = self.dependencies.task_repository_provider(session=session)
                 logger.debug("buypepecoin_repository created")
 
                 # Save the buy request to the DB; 
                 # this method now returns a BuyPepecoinOrderPost200Response.
-                order_response = buypepecoin_repository.save_initial_request_to_transfer_builder(
-                    user_id=self.user_id,
-                    buy_pepecoin_order_post_request=self.request
+                create_task_response = task_repository.create_new_task( user_id=self.user_id,
+                    new_task_request=self.request
                 )
 
                 # Store that in self.preprocessed_data (or directly in self.response)
-                self.preprocessed_data = order_response
+                self.preprocessed_data = create_task_response
 
                 session.commit()
 

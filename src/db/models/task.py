@@ -1,7 +1,7 @@
 # models/task.py
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey, func
 from sqlalchemy.orm import relationship
-from ..database import Base
+from .base import Base, get_current_time
 
 class Task(Base):
     __tablename__ = "tasks"

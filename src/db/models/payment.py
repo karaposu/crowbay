@@ -1,7 +1,8 @@
 # models/payment.py
 from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
-from ..database import Base
+# from ..database import Base
+from .base import Base, get_current_time
 
 class Payment(Base):
     __tablename__ = "payments"
@@ -23,3 +24,4 @@ class Payment(Base):
 
     def __repr__(self):
         return f"<Payment id={self.id} user_id={self.user_id} type={self.payment_type} status={self.status}>"
+    

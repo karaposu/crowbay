@@ -1,5 +1,7 @@
 # coding: utf-8
 
+#tasks_api.py
+
 from typing import Dict, List  # noqa: F401
 import importlib
 import pkgutil
@@ -94,9 +96,7 @@ async def accept_task(
     ),
 ) -> AcceptTask200Response:
     """Allows a user to accept a task, indicating they will complete it."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().accept_task(taskId)
+    pass
 
 
 @router.post(
@@ -118,9 +118,16 @@ async def create_task(
     ),
 ) -> CreateTask201Response:
     """Allows a user to create a task with specified budget, filters, deadlines, etc."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().create_task(create_task_request)
+    try:
+        user_id = int(token_bearerAuth.sub)
+        rh = get_request_handler()
+        return rh.handle_create_task(user_id, create_task_request)
+
+    except Exception as e:
+        logger.error(f"Error processing file: {str(e)}", exc_info=True)  # Log the exception details
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
 
 
 @router.get(
@@ -140,9 +147,7 @@ async def list_my_tasks(
     ),
 ) -> List[ListMyTasks200ResponseInner]:
     """Returns all tasks that the user has created."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().list_my_tasks()
+    pass
 
 
 @router.get(
@@ -162,9 +167,7 @@ async def list_participated_tasks(
     ),
 ) -> List[ListParticipatedTasks200ResponseInner]:
     """Returns tasks that the user accepted or performed in the past or is currently performing."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().list_participated_tasks()
+    pass
 
 
 @router.get(
@@ -192,10 +195,7 @@ async def list_tasks(
     ),
 ) -> List[ListTasks200ResponseInner]:
     """Retrieve a list of tasks with optional filtering."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().list_tasks(user_attribute_filters, total_budget, you_earn, status, creation_date, partition_deadline, submission_deadline, category)
-
+    pass
 
 @router.post(
     "/tasks/{taskId}/dispute",
@@ -218,9 +218,7 @@ async def open_dispute(
     ),
 ) -> OpenDispute200Response:
     """Allows either the task creator or task doer to open a dispute if there’s disagreement about task completion, payment, etc."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().open_dispute(taskId, open_dispute_request)
+    pass
 
 
 @router.post(
@@ -243,9 +241,7 @@ async def reject_task_after_acceptance(
     ),
 ) -> RejectTaskAfterAcceptance200Response:
     """Allows a user to forfeit a task they previously accepted."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().reject_task_after_acceptance(taskId)
+    pass
 
 
 @router.post(
@@ -270,9 +266,7 @@ async def task_validation(
     ),
 ) -> TaskValidation200Response:
     """Allows the task doer to upload screen recording or relevant files for AI verification."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().task_validation(taskId, proof_video, additional_notes)
+    pass
 
 
 @router.post(
@@ -296,6 +290,4 @@ async def validate_task_finished(
     ),
 ) -> ValidateTaskFinished200Response:
     """Allows the system or task creator to confirm the task is completed. Could be triggered by an admin or an automated AI service."""
-    if not BaseTasksApi.subclasses:
-        raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseTasksApi.subclasses[0]().validate_task_finished(taskId, validate_task_finished_request)
+    pass

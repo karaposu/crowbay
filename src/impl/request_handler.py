@@ -130,13 +130,13 @@ class RequestHandler:
    
     
 
-    def handle_get_community_size(self):
+    def handle_create_task(self, user_id, create_task_request):
 
         
-        from impl.services.get_size_service import GetCommunitySize
+        from impl.services.tasks.create_task import CreateTaskService
        
         dependency = self.app.state.services
-        p = GetCommunitySize( dependencies=dependency)
+        p = CreateTaskService( user_id, create_task_request, dependencies=dependency)
         return p.response
 
  

@@ -13,36 +13,36 @@ from werkzeug.security import generate_password_hash
 from .base import Base, get_current_time
 
 
+# we need also table related to all verifications. we cant store everyhing at in user table 
+
 class User(Base):
     __tablename__ = 'users'
-
-    user_id = Column(Integer, primary_key=True, autoincrement=True)
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
+    telegram_handler = Column(String(50), nullable=False)
+    telegram_id = Column(String(50), nullable=False)
+    gender = Column(String(50), nullable=True)
+    nationality = Column(String(50), nullable=True)
+    birthyear = Column(String(50), nullable=True)
     email = Column(String(100), unique=True, nullable=False)
     password_hash = Column(String(128), nullable=False)
     created_at = Column(DateTime, default=get_current_time)
-    is_verified = Column(Boolean, default=False)
+    
+    is_eamil_verified = Column(Boolean, default=False)
+    is_id_verified = Column(Boolean, default=False)
+    does_id_photo_and_selfie_match = Column(Boolean, default=False)
+    validations = relationship(
+        "BaseUserValidation",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
   
 
-   
     def __repr__(self):
         return f"<User(name={self.name}, email={self.email})>"
 
 
-# class UserFeatureUsage(Base):
-#     __tablename__ = 'user_feature_usage'
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False, unique=True)
-#     pdfs_uploaded_this_month = Column(Integer, nullable=False, default=0)
-#     bank_accounts_added = Column(Integer, nullable=False, default=0)
-#     family_members_added = Column(Integer, nullable=False, default=0)
-#     splits_made_this_month = Column(Integer, nullable=False, default=0)
-#     last_reset_date = Column(DateTime, nullable=False, default=get_current_time)
 
-#     # Relationships
-#     user = relationship('User', back_populates='feature_usage')
-
-#     def __repr__(self):
-#         return f"<UserFeatureUsage(user_id={self.user_id})>"
 
 

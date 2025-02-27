@@ -1,7 +1,7 @@
 # create_pepay_db.py
 
 
-#  python -m db.scripts.create_pepay_db
+#  python -m db.scripts.create_crowbay_db
 
 from sqlalchemy import create_engine
 from db.models import Base  # This imports all models via models/__init__.py

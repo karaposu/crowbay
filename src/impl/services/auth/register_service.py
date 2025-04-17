@@ -78,7 +78,7 @@ class RegisterService:
             # Access session_factory and user_repository providers from dependencies
             logger.debug("Accessing session_factory and user_repository providers")
             session_factory = self.dependencies.session_factory()
-            user_repository_provider = self.dependencies.user_repository
+            user_repository_provider = self.dependencies.user_repository_provider
 
             # Create a new database session
             session = session_factory()

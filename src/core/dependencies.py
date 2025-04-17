@@ -12,23 +12,23 @@ def setup_dependencies():
     base_dir = os.path.dirname(__file__)
     
     # Paths for the databases
-    main_db_path = os.path.join(base_dir, "..", "db", "data", "pepay.db")
-    community_db_path = os.path.join(base_dir, "..","..", "..",  "community_size_getter", "community.db")
+    main_db_path = os.path.join(base_dir, "..", "db", "data", "crowbay.db")
+   # community_db_path = os.path.join(base_dir, "..","..", "..",  "community_size_getter", "community.db")
    
     # Resolve absolute paths
     main_db_path = os.path.abspath(main_db_path)
-    community_db_path = os.path.abspath(community_db_path)
+    #community_db_path = os.path.abspath(community_db_path)
     
     # Create database URLs
     main_db_url = f"sqlite:///{main_db_path}"
-    community_db_url = f"sqlite:///{community_db_path}"
+    #community_db_url = f"sqlite:///{community_db_path}"
    
 
     # Initialize the services container
     services = Services()
     services.config.from_dict({
         'db_url': main_db_url,
-        'community_db_url': community_db_url,
+       # 'community_db_url': community_db_url,
         
     })
 

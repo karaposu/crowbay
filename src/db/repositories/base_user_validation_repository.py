@@ -8,7 +8,7 @@ import logging
 import pandas as pd
 from typing import List, Optional
 
-from db.models import ProcessedData, InitialData
+# from db.models import ProcessedData, InitialData
 # from models.split_record_dto import SplitRecordDTO
 
 from sqlalchemy import or_

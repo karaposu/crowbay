@@ -13,7 +13,12 @@ from sqlalchemy.orm import sessionmaker
 from db.session import get_engine
 import yaml
 
-from db.repositories.buypepecoin_repository import BuypepecoinRepository
+from db.repositories.base_user_validation_repository import BaseUserValidationRepository
+# from db.repositories.payment_repository import 
+from db.repositories.task_repository import TaskRepository
+from db.repositories.user_repository import UserRepository
+
+
 # from db.repositories.report_repository import ReportRepository
 
 # from utils.currency_utils import load_currency_configs
@@ -34,25 +39,23 @@ class Services(containers.DeclarativeContainer):
         bind=engine
     )
 
-
-    # community_db Engine provider
-    community_db_engine = providers.Singleton(
-        create_engine,
-        config.community_db_url,
-        echo=False
-    )
-
-    # community db Session factory provider
-    community_db_session_factory = providers.Singleton(
-        sessionmaker,
-        bind=community_db_engine
-    )
-
-
-    buypepecoin_repository_provider = providers.Factory(
-        BuypepecoinRepository,
+    task_repository_provider = providers.Factory(
+        TaskRepository,
         session=providers.Dependency()
     )
+
+
+    user_repository_provider = providers.Factory(
+        UserRepository,
+        session=providers.Dependency()
+    )
+
+
+    base_validation_repository_provider = providers.Factory(
+        BaseUserValidationRepository,
+        session=providers.Dependency()
+    )
+
 
 
 

@@ -5,7 +5,7 @@ from .base import Base, get_current_time
 
 class Task(Base):
     __tablename__ = "tasks"
-
+    
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
@@ -18,7 +18,7 @@ class Task(Base):
     submission_deadline = Column(DateTime(timezone=True), nullable=True)
     category = Column(String, nullable=True)
     bay_review = Column(Boolean, default=False)
-
+    
     # Relationship back to the user who created the task
     owner = relationship("User", back_populates="tasks")
 

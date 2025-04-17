@@ -1,8 +1,8 @@
 
-**CrowBoy:**y
+**CrowBay:**
 
 ### Overview
-Crowboy is a peer-to-peer engagement platform that empowers businesses, influencers, and content creators to boost their online presence through **authentic interactions** from real people—no bots or fake profiles. The platform leverages **AI-driven verification** of screen recordings to ensure tasks are completed properly, offering a trustworthy solution in a crowded market.
+CrowBay is a peer-to-peer engagement platform that empowers businesses, influencers, and content creators to boost their online presence through **authentic interactions** from real people—no bots or fake profiles. The platform leverages **AI-driven verification** of screen recordings to ensure tasks are completed properly, offering a trustworthy solution in a crowded market.
 
 ### Key Features
 1. **Telegram Bot Interface**  

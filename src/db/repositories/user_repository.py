@@ -7,10 +7,54 @@ from fastapi import HTTPException
 from passlib.context import CryptContext
 import logging
 
-from db.models import User, UserSettings
+from db.models import User
 from typing import Optional
 
 logger = logging.getLogger(__name__)
+
+
+
+'''
+
+korkuluk
+
+
+{
+  "desc": "string",
+  "expected_result_explanation"
+  "total_budget": 0,
+  "per_crow_budget": 0,
+   num_of_crows :
+  "task_halving" integer which signifies how many days after task is published, the halving will occur. default is 15, once the halving 
+  occurs, per_crow_budget is doubled.  task_halving is used for tasks where it is hard to find users. 
+  "
+  partition_deadline": "2025-03-03T20:32:14.906Z",
+  "submission_deadline": "2025-03-03T20:32:14.906Z",
+   
+  "example_validation_video"
+  
+  "bay_review": true,
+  "filters": {
+    "city": "string",
+    "demographic": "string"
+  }
+}
+
+
+first location filter will be prompt to the user
+
+
+user must be able to pick fast 
+
+"minsk" and "istanbul" 
+
+"EMEA"
+
+"not india"
+
+
+
+'''
 
 class UserRepository:
     def __init__(self, session: Session):
@@ -27,22 +71,24 @@ class UserRepository:
             )
             self.session.add(db_user)
             self.session.commit()
-            return db_user.user_id
+            return db_user.id
         except SQLAlchemyError as e:
             self.session.rollback()
             logger.error(f"Error adding new user: {str(e)}")
             raise HTTPException(status_code=500, detail="Error adding new user")
-
+    
     def get_user_by_email(self, email: str) -> User:
         try:
+            logger.debug(f"filtering db with the email..")
             db_user = self.session.query(User).filter(User.email == email).first()
             return db_user
         except SQLAlchemyError as e:
             self.session.rollback()
             logger.error(f"Database error: {e}")
             return None
-
+    
     def check_user_by_email(self, email: str) -> bool:
+        logger.debug(f"inside the    check_user_by_email")
         db_user = self.get_user_by_email(email)
         return db_user is not None
 
@@ -122,6 +168,8 @@ class UserRepository:
                 )
                 self.session.add(user_settings)
 
+          
+
             self.session.commit()
             logger.info(f"Updated settings for user_id {user_id} with {update_fields}")
         except SQLAlchemyError as e:
@@ -132,11 +180,4 @@ class UserRepository:
             logger.error(f"Invalid update attempt for user_id {user_id}: {str(ve)}")
             raise HTTPException(status_code=400, detail=str(ve))
     
-    def get_user_settings(self, user_id: int) -> Optional[UserSettings]:
-        try:
-            user_settings = self.session.query(UserSettings).filter_by(user_id=user_id).first()
-            return user_settings
-        except SQLAlchemyError as e:
-            self.session.rollback()
-            logger.error(f"Error getting settings for user_id {user_id}: {str(e)}")
-            raise HTTPException(status_code=500, detail="Error getting user settings")
+   

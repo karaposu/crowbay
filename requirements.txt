@@ -6,7 +6,7 @@ pandas
 matplotlib
 pyyaml
 tqdm
-
+tronpy
 ipywidgets
 fastapi
 werkzeug

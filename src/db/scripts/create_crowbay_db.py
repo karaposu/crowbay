@@ -1,4 +1,4 @@
-# create_pepay_db.py
+# create_crowbay_db.py
 
 
 #  python -m db.scripts.create_crowbay_db

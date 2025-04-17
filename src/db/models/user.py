@@ -19,9 +19,9 @@ class User(Base):
     __tablename__ = 'users'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
-    telegram_handler = Column(String(50), nullable=False)
-    telegram_id = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=True)
+    telegram_handler = Column(String(50), nullable=True)
+    telegram_id = Column(String(50), nullable=True)
     gender = Column(String(50), nullable=True)
     nationality = Column(String(50), nullable=True)
     birthyear = Column(String(50), nullable=True)
@@ -32,6 +32,19 @@ class User(Base):
     is_eamil_verified = Column(Boolean, default=False)
     is_id_verified = Column(Boolean, default=False)
     does_id_photo_and_selfie_match = Column(Boolean, default=False)
+
+
+    # 1) Relationship for Payment
+    payments = relationship("Payment",
+                            back_populates="user",
+                            cascade="all, delete-orphan")
+
+    # 2) Relationship for Task
+    tasks = relationship("Task",
+                         back_populates="owner",
+                         cascade="all, delete-orphan")
+    
+
     validations = relationship(
         "BaseUserValidation",
         back_populates="user",

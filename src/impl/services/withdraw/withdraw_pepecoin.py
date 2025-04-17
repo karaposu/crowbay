@@ -4,9 +4,9 @@ import logging
 from fastapi import HTTPException
 from traceback import format_exc
 
-from impl.utils import create_pepay_db_session
-from models.buy_pepecoin_order_post_request import BuyPepecoinOrderPostRequest
-from models.buy_pepecoin_order_post200_response import BuyPepecoinOrderPost200Response
+from impl.utils import create_db_session
+# from models.buy_pepecoin_order_post_request import BuyPepecoinOrderPostRequest
+# from models.buy_pepecoin_order_post200_response import BuyPepecoinOrderPost200Response
 
 logger = logging.getLogger(__name__)
 # life is in essence is pain that never ends. And in some moments we are relieved fron this pain just a little but and we call this 
@@ -39,7 +39,7 @@ class BuyPepecoinOrderingService:
         #     raise HTTPException(status_code=400, detail="Must specify either give_amount or take_amount.")
 
         try:
-            session = create_pepay_db_session(self.dependencies)
+            session = create_db_session(self.dependencies)
             buypepecoin_repository_provider = self.dependencies.buypepecoin_repository_provider
             
             try:

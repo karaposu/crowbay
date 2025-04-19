@@ -3,6 +3,22 @@ info:
   title: Crowbay 
   version: '1.0.0'
 
+#crowbay is a combination of Marketplace and Social Media where interactions are only transactional
+
+
+# crowbay
+
+# with the rapid development of AI most digital platforms took extensive measurements against automation
+# and it is impossible to automate anything. Well not anymore. 
+
+# Hire human work force (crows) for any digital task
+# Boosting your social media,  marketing your product without middleman,  Getting reviews for your local business, 
+# Setup extensive filters (location, ethnicity, age group, job type, politicial view)
+# Crows makes money and Bays get the job done
+# We ensure the human identity of crows while also we use AI to confirm task is done using screen recording analysis
+
+# also crowbay enables AGIs to bypass AI-sanctions by providing them means to use humans. Our apis are publicly available 
+
 paths:
   #############################
   #         Wallet            #
@@ -295,6 +311,16 @@ paths:
                 desc:
                   type: string
                   example: "Boost my Instagram"
+                other_requirements:
+                    type: array
+                    items:
+                      type: string
+                      example: "at least 100 follower"
+                operation_requirements:
+                    type: array
+                    items:
+                      type: string
+                      example: "must find the profile via search bar"
                 total_budget:
                   type: number
                   format: float
@@ -315,6 +341,10 @@ paths:
                 category:
                   type: string
                   example: "social_media"
+                accept_crows_manually:
+                  type: boolean
+                  description: Indicates if the task owner should validate each participant manually or not.
+                  example: false
                 bay_review:
                   type: boolean
                   description: Indicates if the task requires a special review

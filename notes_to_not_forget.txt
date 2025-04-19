@@ -19,4 +19,5 @@ accept , other attribute filters
 
 
 
-firs 
+2. once a crow selects a task ( task is created with validation required= true ) bays can pick the crows. 
+this is like manual validation. 

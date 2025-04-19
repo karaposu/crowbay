@@ -74,7 +74,7 @@ class LoginService:
             # Access session_factory and user_repository providers from dependencies
             logger.debug("Accessing session_factory and user_repository providers")
             session_factory = self.dependencies.session_factory()
-            user_repository_provider = self.dependencies.user_repository
+            user_repository_provider = self.dependencies.user_repository_provider
 
             # Create a new database session
             session = session_factory()
@@ -97,10 +97,10 @@ class LoginService:
                     raise HTTPException(status_code=400, detail="Invalid email or password")
 
                 # Generate a JWT token for the user
-                logger.debug(f"Generating JWT token for user_id: {db_user.user_id}")
+                logger.debug(f"Generating JWT token for user id: {db_user.id}")
                 access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
                 access_token = create_access_token(
-                    data={"sub": str(db_user.user_id)},
+                    data={"sub": str(db_user.id)},
                     expires_delta=access_token_expires
                 )
 

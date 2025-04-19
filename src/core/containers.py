@@ -44,7 +44,7 @@ class Services(containers.DeclarativeContainer):
         session=providers.Dependency()
     )
 
-
+    
     user_repository_provider = providers.Factory(
         UserRepository,
         session=providers.Dependency()

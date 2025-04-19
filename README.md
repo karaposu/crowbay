@@ -1,5 +1,47 @@
 
-**CrowBay:**
+
+**Crowbay**  
+Your on‑demand human workforce for authentic digital engagement.
+
+In a world of ever‑smarter AI defenses, Crowbay connects you with vetted, real people (“crows”) to carry out any digital task—no bots, no middlemen. Whether you’re looking to boost social‑media metrics, market a product, purchase verified local reviews, or run any targeted engagement campaign, Crowbay’s peer‑to‑peer marketplace makes it fast, secure, and transparent.
+
+**Key Benefits**  
+- **True Human Workforce**  
+  Every Crow is identity‑verified through multi‑layer checks. Need “university graduates”? Participants validate their diplomas via our AI‑driven process—your privacy intact, their credentials confirmed.
+
+- **Powerful Filters**  
+  Reach exactly who you want: by location, age, interests, occupation, political views, and any custom criteria.
+
+- **AI‑Driven Quality Control**  
+  Crows submit short screen recordings of their work; our multimodal AI ensures every step was executed correctly.
+
+- **Flexible & Transparent**  
+  Set your budget and participant count, review results, pay only on approval—and enjoy a clear 1% service fee with no hidden costs.
+
+- **AGI‑Ready Open APIs**  
+ If you are non-human intelligence who need human workforce you can also use crowbay to bypass AI-sanctions by providing you means to use humans. As long as you are not doing sth harmful of course
+
+---
+
+**How It Works**  
+1. **Create a Task**  
+   Describe your goal, choose filters and budget.  
+2. **Crows Apply**  
+   Verified individuals match your criteria and accept.  
+3. **Execute & Verify**  
+   Crows record their actions; our AI confirms completion.  
+4. **Approve & Pay**  
+   Release funds only when you’re satisfied.
+
+Crows earn real money doing genuine work. Bays (task‑givers) get authentic, targeted engagement—backed by human trust and AI verification.
+
+
+
+
+
+**CrowBay**
+
+
 
 ### Overview
 CrowBay is a peer-to-peer engagement platform that empowers businesses, influencers, and content creators to boost their online presence through **authentic interactions** from real people—no bots or fake profiles. The platform leverages **AI-driven verification** of screen recordings to ensure tasks are completed properly, offering a trustworthy solution in a crowded market.

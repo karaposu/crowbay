@@ -2,8 +2,8 @@
 
 from sqlalchemy import create_engine
 
-# Example: local SQLite file named crowbay.db (rename as needed)
-SQLITE_DB_URL = "sqlite:///./db/data/crowbay.db"
+# Example: local SQLite file named crowd.db (rename as needed)
+SQLITE_DB_URL = "sqlite:///./db/data/crowd.db"
 
 engine = create_engine(
     SQLITE_DB_URL,

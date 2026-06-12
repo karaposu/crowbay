@@ -1,7 +1,7 @@
-# create_crowbay_db.py
+# create_crowd_db.py
 
 
-#  python -m db.scripts.create_crowbay_db
+#  python -m db.scripts.create_crowd_db
 
 from sqlalchemy import create_engine
 from db.models import Base  # This imports all models via models/__init__.py
@@ -10,7 +10,7 @@ import os
 def main():
     # Create the SQLite engine (you can change the URI as needed)
     base_dir = os.path.dirname(__file__)
-    main_db_path = os.path.join(base_dir, "..",  "data", "crowbay.db")
+    main_db_path = os.path.join(base_dir, "..",  "data", "crowd.db")
 
     main_db_path = os.path.abspath(main_db_path)
 

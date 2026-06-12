@@ -50,6 +50,11 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+    
+    # Verification relationships
+    proofs = relationship("UserProof", back_populates="user", cascade="all, delete-orphan")
+    verifications = relationship("UserVerification", back_populates="user", cascade="all, delete-orphan")
+    verification_data = relationship("VerificationData", back_populates="user", cascade="all, delete-orphan")
   
 
     def __repr__(self):

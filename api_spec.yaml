@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
-  title: Crowbay 
+  title: Crowd
   version: '1.0.0'
 
-#crowbay is a combination of Marketplace and Social Media where interactions are only transactional
+#crowd is a combination of Marketplace and Social Media where interactions are only transactional
 
 
-# crowbay
+# crowd
 
 # with the rapid development of AI most digital platforms took extensive measurements against automation
 # and it is impossible to automate anything. Well not anymore. 
@@ -17,7 +17,7 @@ info:
 # Crows makes money and Bays get the job done
 # We ensure the human identity of crows while also we use AI to confirm task is done using screen recording analysis
 
-# also crowbay enables AGIs to bypass AI-sanctions by providing them means to use humans. Our apis are publicly available 
+# also crowd enables AGIs to bypass AI-sanctions by providing them means to use humans. Our apis are publicly available 
 
 paths:
   #############################
@@ -304,63 +304,11 @@ paths:
       requestBody:
         required: true
         content:
+           
           application/json:
             schema:
-              type: object
-              properties:
-                desc:
-                  type: string
-                  example: "Boost my Instagram"
-                other_requirements:
-                    type: array
-                    items:
-                      type: string
-                      example: "at least 100 follower"
-                operation_requirements:
-                    type: array
-                    items:
-                      type: string
-                      example: "must find the profile via search bar"
-                total_budget:
-                  type: number
-                  format: float
-                  example: 100
-                you_earn:
-                  type: number
-                  format: float
-                  description: How much each participant will earn
-                  example: 5
-                partition_deadline:
-                  type: string
-                  format: date-time
-                  example: "2025-03-01T10:00:00Z"
-                submission_deadline:
-                  type: string
-                  format: date-time
-                  example: "2025-03-20T10:00:00Z"
-                category:
-                  type: string
-                  example: "social_media"
-                accept_crows_manually:
-                  type: boolean
-                  description: Indicates if the task owner should validate each participant manually or not.
-                  example: false
-                bay_review:
-                  type: boolean
-                  description: Indicates if the task requires a special review
-                  example: false
-                filters:
-                  type: object
-                  properties:
-                    city:
-                      type: string
-                      example: "New York"
-                    demographic:
-                      type: string
-                      example: "university students"
-              required:
-                - desc
-                - total_budget
+              $ref: '#/components/schemas/CreateTaskRequest'
+           
       responses:
         '201':
           description: Task created successfully
@@ -1072,3 +1020,210 @@ components:
               detail:
                 type: string
                 example: "Something went wrong."
+
+  schemas:
+    CreateTaskRequest:
+      type: object
+      nullable: true
+      properties:
+        desc:
+          type: string
+          nullable: true
+          example: "Boost my Instagram"
+        other_requirements:
+          type: array
+          nullable: true
+          items:
+            type: string
+        operation_requirements:
+          type: array
+          nullable: true
+          items:
+            type: string
+          example:
+            - "must find the profile via search bar"
+        total_budget:
+          type: number
+          nullable: true
+          example: 100
+        you_earn:
+          type: number
+          nullable: true
+        partition_deadline:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-03-01T10:00:00Z"
+        submission_deadline:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-03-20T10:00:00Z"
+        category:
+          type: string
+          nullable: true
+        accept_crows_manually:
+          type: boolean
+          nullable: true
+          example: false
+          description: "Indicates if the task owner should validate each participant manually or not."
+        bay_review:
+          type: boolean
+          nullable: true
+        filters:
+          type: object
+          nullable: true
+          properties:
+            basic_filters:
+              type: object
+              nullable: true
+              properties:
+                ethnicity:
+                  type: object
+                  nullable: true
+                  description: Structured ethnicity filters
+                  properties:
+                    allowed:
+                      type: array
+                      nullable: true
+                      items:
+                        type: string
+                    not_allowed:
+                      type: array
+                      nullable: true
+                      items:
+                        type: string
+                    raw_statement:
+                      type: string
+                      nullable: true
+                location_filter:
+                  type: object
+                  nullable: true
+                  description: Structured location filters (with optional raw text)
+                  properties:
+                    raw_statement:
+                      type: string
+                      nullable: true
+                    regions:
+                      type: array
+                      nullable: true
+                      items:
+                        $ref: '#/components/schemas/RegionFilter'
+                    countries:
+                      type: array
+                      nullable: true
+                      items:
+                        $ref: '#/components/schemas/CountryFilter'
+                    cities:
+                      type: array
+                      nullable: true
+                      items:
+                        $ref: '#/components/schemas/CityFilter'
+                language:
+                  type: string
+                  nullable: true
+                age_range:
+                  type: object
+                  nullable: true
+                  properties:
+                    min:
+                      type: integer
+                      nullable: true
+                    max:
+                      type: integer
+                      nullable: true
+                gender:
+                  type: string
+                  nullable: true
+            advanced_filters:
+              type: object
+              nullable: true
+              properties:
+                min_instagram_followers:
+                  type: integer
+                  nullable: true
+                min_tiktok_followers:
+                  type: integer
+                  nullable: true
+                min_linkedin_connections:
+                  type: integer
+                  nullable: true
+                min_github_repositories:
+                  type: integer
+                  nullable: true
+                telegram_account_age_days:
+                  type: integer
+                  nullable: true
+                has_profile_picture:
+                  type: boolean
+                  nullable: true
+                account_verified:
+                  type: boolean
+                  nullable: true
+
+    RegionFilter:
+      type: object
+      nullable: true
+      properties:
+        name:
+          type: string
+          nullable: true
+        exceptions:
+          type: object
+          nullable: true
+          properties:
+            countries:
+              type: array
+              nullable: true
+              items:
+                type: string
+            cities:
+              type: array
+              nullable: true
+              items:
+                type: string
+
+    CountryFilter:
+      type: object
+      nullable: true
+      properties:
+        name:
+          type: string
+          nullable: true
+        exceptions:
+          type: object
+          nullable: true
+          properties:
+            countries:
+              type: array
+              nullable: true
+              items:
+                type: string
+            cities:
+              type: array
+              nullable: true
+              items:
+                type: string
+
+    CityFilter:
+      type: object
+      nullable: true
+      properties:
+        name:
+          type: string
+          nullable: true
+        exceptions:
+          type: object
+          nullable: true
+          properties:
+            countries:
+              type: array
+              nullable: true
+              items:
+                type: string
+            cities:
+              type: array
+              nullable: true
+              items:
+                type: string
+

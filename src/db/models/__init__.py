@@ -1,32 +1,49 @@
-# here is db/models/__init__.py
+# filepath: src/db/models/__init__.py
 
-from .base import Base, get_current_time
-from .user import User
-from .transfer_builder import TransferBuilder
-from .user import User
-from .payment import Payment
-from .task import Task
-from .base_user_validation import BaseUserValidation
-from .verification import (
-    ProofType, 
-    VerificationType, 
-    VerificationProofRequirement,
+from db.base import Base, utcnow
+from db.models.audit import AuditEvent
+from db.models.clarifier import ClarifierRun, DetectionRecord, DraftStatus, TaskDraft
+from db.models.jump import Jump, JumpStatus
+from db.models.notification import Notification
+from db.models.payment import Payment, PaymentStatus, PaymentType
+from db.models.phone import SmsVerification
+from db.models.task import Task, TaskStatus
+from db.models.user import User
+from db.models.verification import (
+    ProofType,
     UserProof,
     UserVerification,
-    VerificationProofUsage,
     VerificationData,
-    VerificationHistory
+    VerificationHistory,
+    VerificationProofRequirement,
+    VerificationProofUsage,
+    VerificationType,
 )
 
-
-# from .settings import UserSettings
-
-# # If you need to expose all models as a list or dictionary
 __all__ = [
-    'Base', 'get_current_time', 'User','Payment' , 'TransferBuilder', 'Task', 'BaseUserValidation',
-    'ProofType', 'VerificationType', 'VerificationProofRequirement', 
-    'UserProof', 'UserVerification', 'VerificationProofUsage',
-    'VerificationData', 'VerificationHistory'
+    "AuditEvent",
+    "Base",
+    "ClarifierRun",
+    "DetectionRecord",
+    "DraftStatus",
+    "Jump",
+    "JumpStatus",
+    "Notification",
+    "Payment",
+    "PaymentStatus",
+    "PaymentType",
+    "ProofType",
+    "SmsVerification",
+    "Task",
+    "TaskDraft",
+    "TaskStatus",
+    "User",
+    "UserProof",
+    "UserVerification",
+    "VerificationData",
+    "VerificationHistory",
+    "VerificationProofRequirement",
+    "VerificationProofUsage",
+    "VerificationType",
+    "utcnow",
 ]
-
-

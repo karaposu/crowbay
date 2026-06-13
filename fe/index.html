@@ -1,0 +1,118 @@
+<!-- filepath: fe/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crowdjump — dev client</title>
+<style>
+  :root {
+    --bg: #0e1621; --panel: #17212b; --bubble-bot: #182533;
+    --bubble-user: #2b5278; --accent: #5288c1; --text: #e1e9f0;
+    --muted: #7d8b99; --danger: #e06c75; --ok: #98c379;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #06080c; color: var(--text);
+    font: 15px/1.45 -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex; justify-content: center; min-height: 100vh;
+  }
+  #frame {
+    width: 100%; max-width: 480px; height: 100vh;
+    display: flex; flex-direction: column; background: var(--bg);
+  }
+  header {
+    background: var(--panel); padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #0a0f16;
+  }
+  header .title { font-weight: 700; }
+  header .who { color: var(--muted); font-size: 12px; flex: 1; text-align: right; }
+  header button {
+    background: none; border: 1px solid #2c3a4a; color: var(--muted);
+    border-radius: 6px; padding: 3px 9px; cursor: pointer; font-size: 12px;
+  }
+  #chat { flex: 1; overflow-y: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .msg { max-width: 84%; padding: 8px 12px; border-radius: 12px; white-space: pre-wrap; word-wrap: break-word; }
+  .bot  { background: var(--bubble-bot); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .user { background: var(--bubble-user); align-self: flex-end; border-bottom-right-radius: 4px; }
+  .bell { background: #1f2b1f; align-self: flex-start; border: 1px solid #2d4a2d; }
+  .err  { background: #3a2026; align-self: flex-start; border: 1px solid #5c2e36; }
+  .msg b { color: #fff; }
+  .msg i { color: var(--muted); }
+  .kb { display: flex; flex-direction: column; gap: 6px; align-self: flex-start; max-width: 84%; }
+  .kb .row { display: flex; gap: 6px; }
+  .kb button {
+    background: var(--panel); color: var(--accent); border: 1px solid #2c3a4a;
+    border-radius: 8px; padding: 7px 12px; cursor: pointer; font-size: 14px; flex: 1;
+    text-align: center;
+  }
+  .kb button:hover { background: #1d2a38; }
+  .kb.used button { color: var(--muted); cursor: default; }
+  #inputbar {
+    display: flex; gap: 8px; padding: 10px; background: var(--panel);
+    border-top: 1px solid #0a0f16;
+  }
+  #cmd {
+    flex: 1; background: var(--bg); border: 1px solid #2c3a4a; color: var(--text);
+    border-radius: 18px; padding: 9px 14px; outline: none; font-size: 15px;
+  }
+  #send {
+    background: var(--accent); color: #fff; border: none; border-radius: 50%;
+    width: 40px; height: 40px; cursor: pointer; font-size: 16px;
+  }
+  /* login overlay */
+  #login {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center; z-index: 10;
+  }
+  #login .box { width: 320px; display: flex; flex-direction: column; gap: 10px; }
+  #login h1 { text-align: center; letter-spacing: 4px; font-size: 22px; }
+  #login p { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  #login input {
+    background: var(--panel); border: 1px solid #2c3a4a; color: var(--text);
+    border-radius: 8px; padding: 10px 12px; font-size: 15px;
+  }
+  #login .row { display: flex; gap: 8px; }
+  #login .row button {
+    flex: 1; padding: 10px; border-radius: 8px; border: none; cursor: pointer;
+    font-size: 15px;
+  }
+  #login #btn-login { background: var(--accent); color: #fff; }
+  #login #btn-register { background: var(--panel); color: var(--accent); border: 1px solid #2c3a4a; }
+  #login .error { color: var(--danger); font-size: 13px; text-align: center; min-height: 18px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+  <div id="login">
+    <div class="box">
+      <h1>CROWDJUMP</h1>
+      <p>Launch a task. The crowd jumps on it.<br><i>dev web client — talks to localhost:8000</i></p>
+      <input id="email" type="email" placeholder="email" autocomplete="username">
+      <input id="password" type="password" placeholder="password (min 8 chars)" autocomplete="current-password">
+      <div class="row">
+        <button id="btn-login">Log in</button>
+        <button id="btn-register">Register</button>
+      </div>
+      <div class="error" id="login-error"></div>
+    </div>
+  </div>
+
+  <div id="frame" class="hidden">
+    <header>
+      <span class="title">Crowdjump</span>
+      <span class="who" id="who"></span>
+      <button id="btn-logout">log out</button>
+    </header>
+    <div id="chat"></div>
+    <div id="inputbar">
+      <input id="cmd" placeholder="type /help, /launch, /browse …" autocomplete="off">
+      <button id="send" title="send">➤</button>
+    </div>
+  </div>
+
+  <input type="file" id="proofFile" class="hidden" accept="video/*,.mp4,.mov,.webm">
+  <script src="app.js"></script>
+</body>
+</html>

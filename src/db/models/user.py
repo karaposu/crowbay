@@ -1,66 +1,42 @@
-# here is db/models/user.py
+# filepath: src/db/models/user.py
 
-from sqlalchemy import (
-    create_engine, Column, Integer, String, DateTime, Float, Text,
-    ForeignKey, LargeBinary, Boolean, UniqueConstraint, CheckConstraint, or_, func
-)
-from sqlalchemy.types import JSON
-from sqlalchemy.orm import declarative_base, relationship, sessionmaker
-from datetime import datetime
-import uuid
-from werkzeug.security import generate_password_hash
+from sqlalchemy import Boolean, Column, DateTime, Integer, String
+from sqlalchemy.orm import relationship
 
-from .base import Base, get_current_time
+from db.base import Base, utcnow
 
-
-# we need also table related to all verifications. we cant store everyhing at in user table 
 
 class User(Base):
-    __tablename__ = 'users'
-    
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=True)
-    telegram_handler = Column(String(50), nullable=True)
-    telegram_id = Column(String(50), nullable=True)
-    gender = Column(String(50), nullable=True)
-    nationality = Column(String(50), nullable=True)
-    birthyear = Column(String(50), nullable=True)
-    email = Column(String(100), unique=True, nullable=False)
-    password_hash = Column(String(128), nullable=False)
-    created_at = Column(DateTime, default=get_current_time)
-    
-    is_eamil_verified = Column(Boolean, default=False)
-    is_id_verified = Column(Boolean, default=False)
-    does_id_photo_and_selfie_match = Column(Boolean, default=False)
+    """One account can act as both Launcher and Jumper; role is per-action.
 
+    Demographic facts deliberately do NOT live here — they live in
+    verification_data as verified attributes.
+    """
 
-    # 1) Relationship for Payment
-    payments = relationship("Payment",
-                            back_populates="user",
-                            cascade="all, delete-orphan")
+    __tablename__ = "users"
 
-    # 2) Relationship for Task
-    tasks = relationship("Task",
-                         back_populates="owner",
-                         cascade="all, delete-orphan")
-    
+    id = Column(Integer, primary_key=True)
+    # Both nullable: accounts created through the Telegram bridge have a
+    # telegram_id but no email/password. Code must ensure every account has
+    # at least one sign-in method (email+password or telegram_id).
+    email = Column(String(255), unique=True, nullable=True, index=True)
+    password_hash = Column(String(128), nullable=True)
+    name = Column(String(100), nullable=True)
+    telegram_handle = Column(String(64), nullable=True)
+    telegram_id = Column(String(64), nullable=True, index=True)
+    is_email_verified = Column(Boolean, nullable=False, default=False)
+    # Written only on successful OTP verify — a set phone is a verified phone.
+    phone_number = Column(String(20), unique=True, nullable=True, index=True)
+    phone_verified_at = Column(DateTime(timezone=True), nullable=True)
+    notifications_muted = Column(Boolean, nullable=False, default=False)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=utcnow)
 
-    validations = relationship(
-        "BaseUserValidation",
-        back_populates="user",
-        cascade="all, delete-orphan"
-    )
-    
-    # Verification relationships
-    proofs = relationship("UserProof", back_populates="user", cascade="all, delete-orphan")
-    verifications = relationship("UserVerification", back_populates="user", cascade="all, delete-orphan")
-    verification_data = relationship("VerificationData", back_populates="user", cascade="all, delete-orphan")
-  
+    tasks = relationship("Task", back_populates="owner")
+    jumps = relationship("Jump", back_populates="jumper")
+    payments = relationship("Payment", back_populates="user")
+    proofs = relationship("UserProof", back_populates="user")
+    verifications = relationship("UserVerification", back_populates="user")
+    verification_data = relationship("VerificationData", back_populates="user")
 
-    def __repr__(self):
-        return f"<User(name={self.name}, email={self.email})>"
-
-
-
-
-
+    def __repr__(self) -> str:
+        return f"<User id={self.id} email={self.email}>"

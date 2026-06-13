@@ -1,0 +1,3 @@
+time estimation of task is also important
+if a task will take 5mins, then min per person price should be higher. 
+also number of actions should taken per task shouldnt exceed 10.  

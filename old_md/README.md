@@ -5,6 +5,19 @@ Your on‑demand human workforce for authentic digital engagement.
 
 In a world of ever‑smarter AI defenses, Performerd connects you with vetted, real people (“performers”) to carry out any digital task—no bots, no middlemen. Whether you’re looking to boost social‑media metrics, market a product, purchase verified local reviews, or run any targeted engagement campaign, Performerd’s peer‑to‑peer marketplace makes it fast, secure, and transparent.
 
+Crowd is a trust machine that makes authentic human action purchasable. Everything in the docs reduces to selling three verified
+  things: verified humans (not bots), verified attributes (this person really is a 24-year-old student in Minsk), and verified work
+  (the screen recording proves the task was done). Payments, matching, and the bot interface are plumbing around those three
+  verifications.
+
+  Anti-bot defenses have made automation worthless, so genuine human engagement became the scarce digital commodity — but there's no
+  market for it. Crowd's bet is that if you can prove the human, prove the demographics, and prove the work, you can run a
+  trustless marketplace for digital actions: bays (posters) get exactly the audience they pay for, crows (performers) earn crypto
+  from anywhere with no bank, and the platform's commission is justified by the verification layer nobody else has. The api_spec's
+  own phrase captures it: "a combination of marketplace and social media where interactions are only transactional."
+
+  
+
 **Key Benefits**  
 - **True Human Workforce**  
   Every Performer is identity‑verified through multi‑layer checks. Need “university graduates”? Participants validate their diplomas via our AI‑driven process—your privacy intact, their credentials confirmed.
